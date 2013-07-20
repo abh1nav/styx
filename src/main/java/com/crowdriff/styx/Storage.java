@@ -17,8 +17,13 @@ public enum Storage {
 
 	@Nullable
 	public StyxMessage get() {
-		size.decrementAndGet();
-		return queue.poll();
+		if(queue.isEmpty()) {
+			return null;
+		}
+		else {
+			size.decrementAndGet();
+			return queue.poll();
+		}
 	}
 
 	public void put(StyxMessage message) {
