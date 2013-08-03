@@ -1,4 +1,4 @@
-package com.crowdriff.styx.http;
+package com.crowdriff.styx.http.handlers;
 
 import com.crowdriff.styx.Storage;
 import com.crowdriff.styx.StyxMessage;
@@ -15,14 +15,12 @@ public class PutHandler extends HttpServlet {
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_OK);
 		String message = request.getParameter("message");
-		String isJson = request.getParameter("json");
 		if(null != message) {
-			StyxMessage styxMessage = (null != isJson) ? new StyxMessage(message, true) : new StyxMessage(message);
-			Storage.I.put(styxMessage);
+			Storage.I.put(new StyxMessage(message));
 			response.getWriter().println("{\"status\": \"ok\"}");
 		}
 		else {
-			response.getWriter().println("{\"error\": \"message cannot be null\"}");
+			response.getWriter().println("{\"error\": \"message parameter cannot be null\"}");
 		}
 	}
 

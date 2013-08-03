@@ -1,6 +1,8 @@
 package com.crowdriff.styx;
 
 import com.google.common.collect.Queues;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -10,6 +12,7 @@ public enum Storage {
 
 	I;
 
+	private static final Logger logger = LoggerFactory.getLogger(Storage.class);
 	private final ConcurrentLinkedQueue<StyxMessage> queue = Queues.newConcurrentLinkedQueue();
 	private final AtomicInteger size = new AtomicInteger(0);
 
@@ -18,6 +21,7 @@ public enum Storage {
 	@Nullable
 	public StyxMessage get() {
 		if(queue.isEmpty()) {
+			logger.info("Queue is empty, returning null");
 			return null;
 		}
 		else {
@@ -31,5 +35,8 @@ public enum Storage {
 		size.incrementAndGet();
 	}
 
+	public int size() {
+		return size.get();
+	}
 
 }

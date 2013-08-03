@@ -1,4 +1,4 @@
-package com.crowdriff.styx.http;
+package com.crowdriff.styx.http.handlers;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +11,6 @@ public class DefaultHandler extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.getWriter().println("{ \"hello\": \"world\" }");
+		response.getWriter().println("{ \"status\": \"ok\" }");
 	}
 }
