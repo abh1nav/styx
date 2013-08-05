@@ -6,7 +6,7 @@
 
     <groupId>com.crowdriff</groupId>
     <artifactId>styx</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.6</version>
 
     <name>Styx</name>
     <organization>
@@ -45,19 +45,14 @@
             <version>${joda.version}</version>
         </dependency>
 
-		<!-- Jetty -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
+        <!-- Redis -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.1.0</version>
+        </dependency>
 
-		<!-- Testing -->
+        <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
