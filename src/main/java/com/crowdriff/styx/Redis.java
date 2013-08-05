@@ -1,66 +1,94 @@
 package com.crowdriff.styx;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import redis.clients.jedis.Jedis;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public enum Redis {
     I;
 
-    private ConcurrentLinkedQueue<Jedis> connections = Queues.newConcurrentLinkedQueue();
+    private List<Jedis> all;
+    private ConcurrentLinkedQueue<Jedis> read, write;
 
     /**
      * Initialize the connections by passing in a list of hosts.
      * @param hosts List of Redis hosts as host or host:port
      */
-    public void init(String[] hosts) {
-        connections = Queues.newConcurrentLinkedQueue();
+    protected void init(String[] hosts) {
+        all = Lists.newArrayList();
+        read = Queues.newConcurrentLinkedQueue();
+        write = Queues.newConcurrentLinkedQueue();
         for(String host : hosts) {
-            connections.offer(connect(host));
+            Jedis jedis = connect(host);
+            all.add(jedis);
+            read.offer(jedis);
+            write.offer(jedis);
         }
     }
 
     /**
-     * Initialize the connection by passing in a single host.
+     * Convenience method to initialize the connection using a single host.
      * @param host host or host:port
      */
-    public void init(String host) {
-        connections = Queues.newConcurrentLinkedQueue();
-        connections.offer(connect(host));
+    protected void init(String host) {
+        init(new String[] { host });
     }
 
 
     /**
-     * Retrieve a the next connection in line.
+     * Retrieve a the next connection in line for reading.
      */
     @Nullable
-    public synchronized Jedis get() {
-        Jedis j = connections.poll();
+    protected synchronized Jedis getReader() {
+        Jedis j = read.poll();
         if(null != j) {
-            connections.offer(j);
+            read.offer(j);
         }
         return j;
     }
 
     /**
+     * Retrieve a the next connection in line for writing.
+     */
+    @Nullable
+    protected synchronized Jedis getWriter() {
+        Jedis j = write.poll();
+        if(null != j) {
+            write.offer(j);
+        }
+        return j;
+    }
+
+    /**
+     * Return a list of all active connections in the rotation.
+     * This is needed to perform some commands like Styx#deleteQueue or StyxQueue#size
+     */
+    protected List<Jedis> getAll() {
+        return all;
+    }
+
+    /**
      * Remove the given connection from the rotation.
      */
-    public synchronized void remove(Jedis jedis) {
+    protected synchronized void remove(Jedis jedis) {
         Preconditions.checkNotNull(jedis);
-        if(connections.contains(jedis)) {
-            connections.remove(jedis);
+        if(all.contains(jedis)) {
+            all.remove(jedis);
+            read.remove(jedis);
+            write.remove(jedis);
         }
     }
 
     /**
      * Return the number of connections in play at the moment.
-     * Warning: This is a O(n) method because of the underlying ConcurrentLinkedQueue#size implementation.
      */
-    public int size() {
-        return connections.size();
+    protected int size() {
+        return all.size();
     }
 
     /************************************************************************************

@@ -16,7 +16,7 @@ public class RedisTest {
 
     @Test
     public void testGet() throws Exception {
-        Jedis jedis = Redis.I.get();
+        Jedis jedis = Redis.I.getReader();
         assertNotNull(jedis);
     }
 
@@ -27,7 +27,7 @@ public class RedisTest {
 
     @Test
     public void testRemove() throws Exception {
-        Jedis jedis = Redis.I.get();
+        Jedis jedis = Redis.I.getReader();
         Redis.I.remove(jedis);
         assertEquals(0, Redis.I.size());
     }
