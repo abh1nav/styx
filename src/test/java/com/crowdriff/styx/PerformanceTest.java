@@ -15,11 +15,11 @@ public class PerformanceTest {
     private final Logger logger = LoggerFactory.getLogger(PerformanceTest.class);
     StyxQueue q = null;
 
-    protected PerformanceTest(StyxQueue q) {
+    public PerformanceTest(StyxQueue q) {
         this.q = q;
     }
 
-    protected int doRun() {
+    public int doRun() {
         int numThreads = 1;
         ExecutorService pool = Executors.newFixedThreadPool(numThreads);
         List<Worker> workers = Lists.newArrayList();
