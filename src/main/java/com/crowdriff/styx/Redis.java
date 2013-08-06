@@ -9,8 +9,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public enum Redis {
-    I;
+public class Redis {
 
     private List<Jedis> all;
     private ConcurrentLinkedQueue<Jedis> read, write;
@@ -19,7 +18,7 @@ public enum Redis {
      * Initialize the connections by passing in a list of hosts.
      * @param hosts List of Redis hosts as host or host:port
      */
-    protected void init(String[] hosts) {
+    protected Redis(String[] hosts) {
         all = Lists.newArrayList();
         read = Queues.newConcurrentLinkedQueue();
         write = Queues.newConcurrentLinkedQueue();
@@ -35,8 +34,8 @@ public enum Redis {
      * Convenience method to initialize the connection using a single host.
      * @param host host or host:port
      */
-    protected void init(String host) {
-        init(new String[] { host });
+    protected Redis(String host) {
+        this(new String[] { host });
     }
 
 

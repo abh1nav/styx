@@ -6,9 +6,11 @@ import javax.annotation.Nullable;
 
 public class StyxQueue {
 
+    private final Redis connection;
     private final String name;
 
-    protected StyxQueue(String name) {
+    protected StyxQueue(Redis connection, String name) {
+        this.connection = connection;
         this.name = name;
     }
 
@@ -18,7 +20,7 @@ public class StyxQueue {
 
     @Nullable
     public String get() throws Exception {
-        Jedis jedis = Redis.I.getReader();
+        Jedis jedis = connection.getReader();
         if(null == jedis) {
             throw new Exception("No Redis connections are active");
         }
@@ -28,7 +30,7 @@ public class StyxQueue {
     }
 
     public void put(String message) throws Exception {
-        Jedis jedis = Redis.I.getWriter();
+        Jedis jedis = connection.getWriter();
         if(null == jedis) {
             throw new Exception("No Redis connections are active");
         }
@@ -38,7 +40,7 @@ public class StyxQueue {
 
     public int size() {
         int size = 0;
-        for(Jedis jedis : Redis.I.getAll()) {
+        for(Jedis jedis : connection.getAll()) {
             size += jedis.llen(this.name);
         }
         return size;

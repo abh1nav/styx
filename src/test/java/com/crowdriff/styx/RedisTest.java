@@ -9,26 +9,29 @@ import static junit.framework.TestCase.assertNotNull;
 
 public class RedisTest {
 
+    Redis redis = null;
+
     @Before
     public void setUp() throws Exception {
-        Redis.I.init("localhost:6700");
+        redis = new Redis("localhost:6700");
     }
 
     @Test
     public void testGet() throws Exception {
-        Jedis jedis = Redis.I.getReader();
+        Jedis jedis = redis.getReader();
         assertNotNull(jedis);
     }
 
     @Test
     public void testSize() throws Exception {
-        assertEquals(1, Redis.I.size());
+        assertEquals(1, redis.size());
     }
 
     @Test
     public void testRemove() throws Exception {
-        Jedis jedis = Redis.I.getReader();
-        Redis.I.remove(jedis);
-        assertEquals(0, Redis.I.size());
+        Jedis jedis = redis.getReader();
+        redis.remove(jedis);
+        assertEquals(0, redis.size());
     }
+
 }
