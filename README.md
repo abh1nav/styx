@@ -20,7 +20,7 @@ Clone this repo and run `mvn clean assembly:single` in the root. It'll produce a
 ```java
 import com.crowdriff.styx.*;
 
-Styx styx = new Styx(String[]{ "redis1.example.com", "redis2.example.com:9000", "redis3.example.com" });
+Styx styx = new Styx(String[]{"redis1.example.com", "redis2.example.com:9000"});
 StyxQueue q = styx.getQueue("myTestQueue");
 
 q.put("Hello World!");
